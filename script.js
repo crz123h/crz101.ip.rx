@@ -1,23 +1,23 @@
-async function analyzeTarget() {
-    const target = document.getElementById('targetInput').value;
+const express = require('express');
+const router = express.Router();
+const fetch = require('node-fetch');
 
-    if (!target) {
-        alert('Please enter a target');
-        return;
+// مسار Shodan API
+router.get('/shodan', async (req, res) => {
+    const { query } = req.query;
+    const apiKey = '3eUPKAyjY5nIQS17qJKt8qmdoOS3Fmz1'; // استبدل المفتاح هنا بمفتاح Shodan API الخاص بك
+
+    if (!query) {
+        return res.status(400).json({ error: 'Query parameter is required' });
     }
 
     try {
-        const response = await fetch(`/api/shodan?query=${target}`);
+        const response = await fetch(`https://api.shodan.io/shodan/host/search?key=${apiKey}&query=${query}`);
         const data = await response.json();
-
-        if (data.error) {
-            alert(`Error: ${data.error}`);
-            return;
-        }
-
-        document.getElementById('resultsContainer').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        res.json(data);
     } catch (error) {
-        console.error(error);
-        alert('Failed to fetch data from Shodan');
+        res.status(500).json({ error: error.message });
     }
-}
+});
+
+module.exports = router;
