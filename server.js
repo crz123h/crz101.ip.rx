@@ -1,21 +1,37 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const path = require('path');
-
-// إعداد التطبيق
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// إعداد المنفذ
+const PORT = 3000;
 
-// مسارات API
-const apiRoutes = require('./routes/api');
-const authRoutes = require('./routes/auth');
+// تقديم الملفات الثابتة (HTML, CSS, JS) من المجلد الحالي
+app.use(express.static(__dirname));
+
+// إعداد المسارات للملفات المختلفة
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/about.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'about.html'));
+});
+
+app.get('/contact.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'contact.html'));
+});
+
+app.get('/privacy.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'privacy.html'));
+});
+
+app.get('/terms.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'terms.html'));
+});
+
+// استخدام المسارات الخاصة بـ API
+const apiRoutes = require('./scraip.js');
 app.use('/api', apiRoutes);
-app.use('/auth', authRoutes);
 
 // تشغيل الخادم
 app.listen(PORT, () => {
